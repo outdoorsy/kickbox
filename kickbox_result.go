@@ -33,7 +33,12 @@ func (r Result) IsRisky() bool {
 	return (r.Result == "risky")
 }
 
-// IsUnknown returns true if the API returns "result: unknown"
+// IsUnknown returns true if the API returns "result: unknown" and reason is not "no_connect"
+//
+// Unknown results mean the email address could not be verified at this time.
+// We were unable to connect to the SMTP server. This could be a temporary issue and we encourage you to retry within the next 15-30 minutes.
+// Ok to send? Yes, with caution
 func (r Result) IsUnknown() bool {
-	return (r.Result == "unknown")
+	// We're seeing quite a few errors recently with me.com, icloud.com, mac.com
+	return (r.Result == "unknown" && r.Reason != "no_connect")
 }
